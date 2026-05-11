@@ -1,36 +1,35 @@
 # AutoOSINT
 
-A modular CLI-based OSINT automation framework for collecting and correlating public intelligence from usernames, emails, phone numbers, and domains.
+OSINT automation framework for discovering public information from usernames, emails, phone numbers, and domains.
 
 ## Features
 
-### ✅ Username Enumeration
-- Like Sherlock
+###  Username Enumeration
+- Similar to Sherlock
 - Check: GitHub, Reddit, TikTok, Instagram, Twitter/X, Steam, Medium
 - Output: `[FOUND] GitHub: github.com/johndoe`
 
-### ✅ Email Intelligence
+### Email Intelligence
 - Domain extraction
 - MX lookup
 - Breach exposure APIs
 - Gravatar lookup
 - Username derivation
 
-### ✅ Phone Intelligence
-- Like PhoneInfoga
+### Phone Intelligence
+- Similar to PhoneInfoga
 - Carrier lookup
 - Country
 - Timezone
 - Format validation
 
-### ✅ Domain Recon
+###  Domain Recon
 - WHOIS
 - DNS
 - Subdomains
 - SSL certificate info
 
-### 🚀 The Correlation Engine (Differentiator)
-The Correlation Engine makes the tool intelligent by deriving potential usernames from emails and matching them across different platforms.
+
 
 ## Project Structure
 
@@ -67,6 +66,7 @@ AutoOSINT/
 │   │
 │   └── domain/
 │       ├── __init__.py
+│       ├── dns_recon.py
 │
 ├── utils/
 │   ├── __init__.py
