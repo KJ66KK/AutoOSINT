@@ -38,31 +38,56 @@ The Correlation Engine makes the tool intelligent by deriving potential username
 AutoOSINT/
 │
 ├── cli.py
+├── config.py
 ├── requirements.txt
 ├── README.md
+├── LICENSE
+├── .gitignore
 │
 ├── core/
+│   ├── __init__.py
 │   ├── engine.py
 │   ├── formatter.py
 │   └── correlator.py
 │
 ├── modules/
-│   ├── username/
+│   ├── __init__.py
+│   │
 │   ├── email/
+│   │   ├── __init__.py
+│   │   └── breach_check.py
+│   │
+│   ├── username/
+│   │   ├── __init__.py
+│   │   └── social_scan.py
+│   │
 │   ├── phone/
+│   │   ├── __init__.py
+│   │   └── carrier_lookup.py
+│   │
 │   └── domain/
+│       ├── __init__.py
 │
 ├── utils/
-│   ├── requests.py
+│   ├── __init__.py
+│   ├── http_client.py
 │   └── validators.py
 │
-└── output/
+├── output/
+│   ├── results/
+│   └── logs/
+│
+├── tests/
+│
+└── docs/
+    ├── architecture.md
+    └── roadmap.md
 ```
 
 ## Setup & Installation
 
 ```bash
-git clone https://github.com/YOURNAME/AutoOSINT.git
+git clone https://github.com/KJ66KK/AutoOSINT.git
 cd AutoOSINT
 pip install -r requirements.txt
 ```
