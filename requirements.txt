@@ -1,3 +1,7 @@
 typer[all]
 pydantic
 rich
+requests
+dnspython
+phonenumbers
+python-dotenv

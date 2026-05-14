@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "autoosint"
+version = "0.1.0"
+description = "A professional OSINT investigation tool"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "typer[all]",
+    "pydantic",
+    "rich",
+    "requests",
+    "dnspython",
+    "phonenumbers",
+]
+
+[project.scripts]
+autoosint = "cli:app"
+
+[tool.setuptools]
+packages = ["core", "modules", "utils"]
+py-modules = ["cli"]
