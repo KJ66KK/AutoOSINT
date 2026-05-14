@@ -11,7 +11,7 @@
 
 ### 1. Installation
 Clone the repository and install the tool globally:
-
+(tip for users who are new to installing tools from github, create a python virtual enviroment)
 ```bash
 git clone https://github.com/yourusername/AutoOSINT.git
 cd AutoOSINT
