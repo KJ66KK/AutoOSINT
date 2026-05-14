@@ -1,109 +1,76 @@
-# AutoOSINT
+# 🛡️ AutoOSINT
 
-OSINT automation framework for discovering public information from usernames, emails, phone numbers, and domains.
+[![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-## Features
+**AutoOSINT** is a professional-grade Open Source Intelligence (OSINT) tool designed for fast, accurate investigations. It automates the process of gathering intelligence on domains, emails, usernames, and phone numbers.
 
-###  Username Enumeration
-- Similar to Sherlock
-- Check: GitHub, Reddit, TikTok, Instagram, Twitter/X, Steam, Medium
-- Output: `[FOUND] GitHub: github.com/johndoe`
+---
 
-### Email Intelligence
-- Domain extraction
-- MX lookup
-- Breach exposure APIs
-- Gravatar lookup
-- Username derivation
+## 🚀 Quick Start
 
-### Phone Intelligence
-- Similar to PhoneInfoga
-- Carrier lookup
-- Country
-- Timezone
-- Format validation
-
-###  Domain Recon
-- WHOIS
-- DNS
-- Subdomains
-- SSL certificate info
-
-
-
-## Project Structure
-
-```
-AutoOSINT/
-│
-├── cli.py
-├── config.py
-├── requirements.txt
-├── README.md
-├── LICENSE
-├── .gitignore
-│
-├── core/
-│   ├── __init__.py
-│   ├── engine.py
-│   ├── formatter.py
-│   └── correlator.py
-│
-├── modules/
-│   ├── __init__.py
-│   │
-│   ├── email/
-│   │   ├── __init__.py
-│   │   └── breach_check.py
-│   │
-│   ├── username/
-│   │   ├── __init__.py
-│   │   └── social_scan.py
-│   │
-│   ├── phone/
-│   │   ├── __init__.py
-│   │   └── carrier_lookup.py
-│   │
-│   └── domain/
-│       ├── __init__.py
-│       ├── dns_recon.py
-│
-├── utils/
-│   ├── __init__.py
-│   ├── http_client.py
-│   └── validators.py
-│
-├── output/
-│   ├── results/
-│   └── logs/
-│
-├── tests/
-│
-└── docs/
-    ├── architecture.md
-    └── roadmap.md
-```
-
-## Setup & Installation
+### 1. Installation
+Clone the repository and install the tool globally:
 
 ```bash
-git clone https://github.com/KJ66KK/AutoOSINT.git
+git clone https://github.com/yourusername/AutoOSINT.git
 cd AutoOSINT
-pip install -r requirements.txt
+pip install .
 ```
 
-## Usage
+### 2. Basic Usage
+AutoOSINT is designed to be used with explicit flags. No complex subcommands needed!
 
 ```bash
-python cli.py email example@gmail.com
-python cli.py username johndoe123
-python cli.py phone +9665XXXXXXX
-python cli.py domain example.com
+# Scan a Domain
+autoosint -d google.com
+
+# Scan an Email
+autoosint -e admin@example.com
+
+# Scan a Username
+autoosint -u "johndoe"
+
+# Scan a Phone Number (Saudi Arabia & Global)
+autoosint -p "(966)50XXXXXXX"
 ```
 
-## Recommended Libraries
-- **typer**: CLI framework
-- **rich**: Beautiful terminal output
-- **aiohttp**: Async HTTP requests
-- **phonenumbers**: Phone number validation
-- **email-validator**: Email validation
+### 3. Exporting Data
+Save your investigation results to professional JSON or CSV formats:
+```bash
+autoosint -d target.com --export json
+```
+
+---
+
+## 🛠️ Features
+*   **DNS Reconnaissance**: Real-time lookup of A, MX, and TXT records.
+*   **Global Phone Lookup**: Intelligent carrier and location detection (Optimized for KSA).
+*   **Social Scanner**: Checks account existence across major platforms.
+*   **Breach Engine**: Modular framework for data leak identification.
+*   **Data Correlator**: An "AI-lite" layer that finds hidden patterns in your findings.
+
+---
+
+## ⚙️ Configuration
+Create a `.env` file in the root directory to add your private API keys:
+```bash
+HIBP_API_KEY=your_key_here
+SHODAN_API_KEY=your_key_here
+```
+
+---
+
+## ❓ Troubleshooting (Command Not Found)
+If you get an error saying `'autoosint' is not recognized`, your Python Scripts folder is likely not in your **PATH**.
+
+**Windows Fix:**
+1. Find your Python Scripts path (usually `C:\Users\YourUser\AppData\Roaming\Python\Python3X\Scripts`).
+2. Search Windows for "Edit the system environment variables".
+3. Click "Environment Variables" > Select "Path" > "Edit" > "New".
+4. Paste the path and restart your terminal.
+
+---
+
+## 🤝 Contributing
+Contributions are welcome! Please see [ROADMAP.md](ROADMAP.md) for future expansion ideas.

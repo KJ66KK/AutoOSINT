@@ -18,7 +18,7 @@ dependencies = [
 ]
 
 [project.scripts]
-autoosint = "cli:app"
+autoosint = "cli:main"
 
 [tool.setuptools]
 packages = ["core", "modules", "utils"]
