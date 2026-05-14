@@ -15,11 +15,16 @@ dependencies = [
     "requests",
     "dnspython",
     "phonenumbers",
+    "python-dotenv",
 ]
 
 [project.scripts]
-autoosint = "cli:main"
+autoosint = "cli:app"
 
 [tool.setuptools]
-packages = ["core", "modules", "utils"]
 py-modules = ["cli"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["core*", "modules*", "utils*"]
+exclude = ["tests*", "output*"]
