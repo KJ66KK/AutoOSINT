@@ -22,9 +22,5 @@ dependencies = [
 autoosint = "cli:app"
 
 [tool.setuptools]
+packages = ["core", "modules", "modules.domain", "modules.email", "modules.phone", "modules.username", "utils"]
 py-modules = ["cli"]
-
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["core*", "modules*", "utils*"]
-exclude = ["tests*", "output*"]

@@ -64,4 +64,8 @@ Big additions to make AutoOSINT a top-tier product.
 
 ---
 
-*Good luck with your launch! You have a solid foundation to build the next big OSINT tool.*
+## 📝 5. Operational Notes (Important)
+*   **Local Testing**: You do NOT need to push to GitHub to test changes. Running `pip install .` inside your local project folder will update the `autoosint` command immediately.
+*   **Virtual Environments**: Always use a `venv` to keep your system Python clean. Activate it with `.\venv\Scripts\activate` before testing.
+*   **API Security**: Never commit your `.env` file. It is currently in the `.gitignore` for your safety.
+*   **Results Location**: All investigation outputs are stored in the `output/results/` directory of the project.

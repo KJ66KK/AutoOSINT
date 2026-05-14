@@ -11,7 +11,20 @@ from core.formatter import export_to_json, export_to_csv
 
 # Initialize Typer with a simpler structure
 app = typer.Typer(
-    help="[bold cyan]AutoOSINT[/bold cyan] - A professional OSINT investigation tool.",
+    help="""
+    [bold cyan]AutoOSINT[/bold cyan] - A professional OSINT investigation tool.
+    
+    [bold underline]Usage Examples:[/bold underline]
+    
+    [yellow]1. Forced Target Flags (Mandatory):[/yellow]
+    $ autoosint [bold]-e[/bold] admin@example.com   (Email)
+    $ autoosint [bold]-d[/bold] target.com          (Domain)
+    $ autoosint [bold]-u[/bold] username            (Username)
+    $ autoosint [bold]-p[/bold] "(966)50XXXXXXX"    (Phone)
+    
+    [yellow]2. Exporting Results:[/yellow]
+    $ autoosint [bold]-d[/bold] google.com [bold]--export json[/bold]
+    """,
     rich_markup_mode="rich"
 )
 
@@ -81,7 +94,8 @@ def main(
 
     # If no flags are provided and no subcommand was called, show help
     if ctx.invoked_subcommand is None and not any([email, domain, username, phone]):
-        console.print(app.get_help(ctx))
+        console.print(Panel("[bold cyan]Welcome to AutoOSINT![/bold cyan]\n\nPlease specify a target type using a flag (e.g., [bold]-d google.com[/bold]).", border_style="cyan"))
+        console.print(ctx.get_help())
         raise typer.Exit()
 
     if ctx.invoked_subcommand:
