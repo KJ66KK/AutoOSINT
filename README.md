@@ -4,6 +4,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 **AutoOSINT** is a professional-grade Open Source Intelligence (OSINT) tool designed for fast, accurate investigations. It automates the process of gathering intelligence on domains, emails, usernames, and phone numbers.
+Similar to tools such as Sherlock and Phoneinfoga
 
 ---
 
