@@ -3,54 +3,62 @@ from utils.http_client import HTTPClient
 import os
 from dotenv import load_dotenv
 
-# Load keys from .env file
 load_dotenv()
 
 class EmailBreachModule:
+    """
+    Email Breach Check using LeakCheck.io (Free Tier Friendly).
+    """
     def __init__(self):
         self.http_client = HTTPClient()
-        self.api_key = os.getenv("HIBP_API_KEY")
+        self.api_key = os.getenv("LEAKCHECK_API_KEY")
 
     def scan(self, email: str) -> ModuleResult:
+        # If no key, we can still use their public free endpoint (if available) 
+        # or report error.
         if not self.api_key:
             return ModuleResult(
                 module_name="BreachCheck",
                 target=email,
                 success=False,
                 data={},
-                error="HIBP_API_KEY not found in .env file."
+                error="LEAKCHECK_API_KEY not found in .env file."
             )
 
-        # REAL API CALL (HaveIBeenPwned example)
-        url = f"https://haveibeenpwned.com/api/v3/breachedaccount/{email}"
-        headers = {"hibp-api-key": self.api_key}
+        # LeakCheck.io API v2
+        url = f"https://leakcheck.io/api/v2/query/{email}"
+        params = {"key": self.api_key, "type": "email"}
         
-        # We use a custom header here directly because HIBP requires it
-        response = self.http_client.get(url) 
-        # Note: You might need to update HTTPClient to accept custom headers per request!
+        response = self.http_client.get(url, params=params)
 
-        if response["status_code"] == 200:
-            breaches = response["data"]
-            return ModuleResult(
-                module_name="BreachCheck",
-                target=email,
-                success=True,
-                data={"breaches_found": len(breaches), "sources": breaches},
-                confidence="HIGH"
-            )
-        elif response["status_code"] == 404:
-            return ModuleResult(
-                module_name="BreachCheck",
-                target=email,
-                success=True,
-                data={"breaches_found": 0, "sources": []},
-                confidence="HIGH"
-            )
-        else:
-            return ModuleResult(
-                module_name="BreachCheck",
-                target=email,
-                success=False,
-                data={},
-                error=f"API Error: {response['status_code']}"
-            )
+        if response["status_code"] == 200 and isinstance(response["data"], dict):
+            api_data = response["data"]
+            if api_data.get("success"):
+                sources = [item.get("source") for sublist in api_data.get("sources", []) for item in sublist] if isinstance(api_data.get("sources"), list) else []
+                return ModuleResult(
+                    module_name="BreachCheck",
+                    target=email,
+                    success=True,
+                    data={
+                        "breach_found": api_data.get("found", 0) > 0,
+                        "total_leaks": api_data.get("found", 0),
+                        "sources": api_data.get("sources", [])
+                    },
+                    confidence="HIGH"
+                )
+            else:
+                return ModuleResult(
+                    module_name="BreachCheck",
+                    target=email,
+                    success=False,
+                    data={},
+                    error=f"LeakCheck API: {api_data.get('error', 'Unknown error')}"
+                )
+        
+        return ModuleResult(
+            module_name="BreachCheck",
+            target=email,
+            success=False,
+            data={},
+            error=f"HTTP Error: {response['status_code']}"
+        )

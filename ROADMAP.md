@@ -57,14 +57,30 @@ Big additions to make AutoOSINT a top-tier product.
 ---
 
 ## ✅ 4. Launch Checklist
-*   [ ] Create `.env` file for API keys.
-*   [ ] Add real API logic to `modules/email/breach_check.py`.
-*   [ ] Test your KSA phone logic with a real Saudi number.
-*   [ ] Verify that `output/results/` is correctly saving CSV/JSON files.
+*   [ ] Create `.env` file in the root directory.
+*   [ ] Add `LEAKCHECK_API_KEY` (Free variant for Email).
+*   [ ] Add `SHODAN_API_KEY` (Student/Paid tier for Domains).
+*   [ ] Add `SECURITYTRAILS_API_KEY` (SecurityTrails).
+*   [ ] Add `NUMVERIFY_API_KEY` (NumVerify).
 
 ---
 
-## 📝 5. Operational Notes (Important)
+## 🔗 5. Deep Scanning & Pivoting (The "Chain" Feature)
+This is the core "Connected OSINT" feature that links findings together automatically.
+
+### ⚙️ How it Works
+*   **Pivots**: Modules can now return a `pivots` list (e.g., a username scan finds an email).
+*   **Recursive Engine**: When the `-D` or `--deep` flag is used, the engine automatically starts a new scan for every pivot found.
+*   **Safety**: The engine tracks "visited" targets to prevent infinite loops (e.g., if target A links to B, and B links back to A).
+
+### 🚀 Expansion Ideas for Pivoting
+1.  **Regex Extraction**: Add regex logic to `SocialScanModule` to scrape emails/phones directly from profile bios.
+2.  **Domain-to-IP Pivot**: If a domain is scanned, automatically pivot to scan the resulting IP address for open ports (Shodan).
+3.  **Depth Control**: Currently, it follows all links. You could add a `--depth` flag to limit how many "hops" the tool takes (e.g., `--depth 2`).
+
+---
+
+## 📝 6. Operational Notes (Important)
 *   **Local Testing**: You do NOT need to push to GitHub to test changes. Running `pip install .` inside your local project folder will update the `autoosint` command immediately.
 *   **Virtual Environments**: Always use a `venv` to keep your system Python clean. Activate it with `.\venv\Scripts\activate` before testing.
 *   **API Security**: Never commit your `.env` file. It is currently in the `.gitignore` for your safety.

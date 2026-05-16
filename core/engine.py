@@ -23,26 +23,39 @@ class ScannerEngine:
             "username": [SocialScanModule()]
         }
 
-    def run_all(self, target: str, target_type: str) -> List[ModuleResult]:
+    def run_all(self, target: str, target_type: str, recursive: bool = False, visited: set = None) -> List[ModuleResult]:
         """
-        Runs all modules registered for a specific target_type.
+        Runs all modules and optionally follows 'pivots' to scan linked data.
+        """
+        if visited is None:
+            visited = set()
         
-        PRO TIP: 
-        To make this 10x faster, use 'concurrent.futures.ThreadPoolExecutor' 
-        to run 'module.scan' in parallel threads. OSINT is mostly network-bound!
-        """
+        # Prevent infinite loops
+        state_key = f"{target_type}:{target}"
+        if state_key in visited:
+            return []
+        visited.add(state_key)
+
         results = []
         applicable_modules = self.modules.get(target_type, [])
-        
-        # If it's a username, maybe we also want to run it against some email parts? 
-        # Keeping it simple for now based on target_type.
 
         for module in applicable_modules:
             try:
                 result = module.scan(target)
                 results.append(result)
+                
+                # RECURSIVE PIVOT LOGIC
+                if recursive and result.pivots:
+                    for pivot in result.pivots:
+                        pivot_results = self.run_all(
+                            pivot["value"], 
+                            pivot["type"], 
+                            recursive=True, 
+                            visited=visited
+                        )
+                        results.extend(pivot_results)
+                        
             except Exception as e:
-                # Catch-all to prevent one module crashing the whole scan
                 results.append(ModuleResult(
                     module_name=module.__class__.__name__,
                     target=target,

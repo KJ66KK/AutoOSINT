@@ -6,31 +6,39 @@ class HTTPClient:
     A unified wrapper for all network requests. 
     Centralizing this allows you to add security features globally.
     """
-    def __init__(self, timeout: int = 10):
+    def __init__(self, timeout: int = 15):
         self.timeout = timeout
-        # PRO TIP: 
-        # 1. Use 'requests.Session()' here to keep connections alive (faster).
-        # 2. To avoid being blocked, rotate your 'User-Agent' from a list of common browsers.
-        # 3. Add a 'self.proxies' dict if you want to route traffic through Tor or VPNs.
-        self.headers = {
+        self.default_headers = {
             "User-Agent": "AutoOSINT/1.0 (Security Research Tool; +https://github.com/yourusername/AutoOSINT)"
         }
 
-    def get(self, url: str, params: Optional[Dict] = None) -> Dict[str, Any]:
+    def get(self, url: str, params: Optional[Dict] = None, headers: Optional[Dict] = None) -> Dict[str, Any]:
         """
         Perform a safe GET request and return a standardized response.
         """
+        # Merge default headers with request-specific headers
+        request_headers = self.default_headers.copy()
+        if headers:
+            request_headers.update(headers)
+
         try:
             response = requests.get(
                 url, 
                 params=params, 
-                headers=self.headers, 
+                headers=request_headers, 
                 timeout=self.timeout
             )
+            
+            # Handle potential JSON decoding errors
+            try:
+                data = response.json()
+            except ValueError:
+                data = response.text
+
             return {
                 "status_code": response.status_code,
-                "data": response.json() if "application/json" in response.headers.get("Content-Type", "") else response.text,
-                "error": None
+                "data": data,
+                "error": None if response.status_code < 400 else f"HTTP Error {response.status_code}"
             }
         except requests.exceptions.RequestException as e:
             return {
@@ -39,21 +47,22 @@ class HTTPClient:
                 "error": str(e)
             }
 
-    def post(self, url: str, data: Dict) -> Dict[str, Any]:
-        """
-        Perform a safe POST request.
-        """
+    def post(self, url: str, data: Dict, headers: Optional[Dict] = None) -> Dict[str, Any]:
+        request_headers = self.default_headers.copy()
+        if headers:
+            request_headers.update(headers)
+
         try:
             response = requests.post(
                 url, 
                 json=data, 
-                headers=self.headers, 
+                headers=request_headers, 
                 timeout=self.timeout
             )
             return {
                 "status_code": response.status_code,
                 "data": response.json() if "application/json" in response.headers.get("Content-Type", "") else response.text,
-                "error": None
+                "error": None if response.status_code < 200 else f"HTTP Error {response.status_code}"
             }
         except requests.exceptions.RequestException as e:
             return {

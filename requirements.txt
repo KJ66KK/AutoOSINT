@@ -5,3 +5,4 @@ requests
 dnspython
 phonenumbers
 python-dotenv
+shodan

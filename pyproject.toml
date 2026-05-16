@@ -16,6 +16,7 @@ dependencies = [
     "dnspython",
     "phonenumbers",
     "python-dotenv",
+    "shodan",
 ]
 
 [project.scripts]

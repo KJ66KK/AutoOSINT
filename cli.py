@@ -22,7 +22,10 @@ app = typer.Typer(
     $ autoosint [bold]-u[/bold] username            (Username)
     $ autoosint [bold]-p[/bold] "(966)50XXXXXXX"    (Phone)
     
-    [yellow]2. Exporting Results:[/yellow]
+    [yellow]2. Deep Scanning (Pivoting):[/yellow]
+    $ autoosint [bold]-u[/bold] johndoe [bold]-D[/bold] (or --deep)
+    
+    [yellow]3. Exporting Results:[/yellow]
     $ autoosint [bold]-d[/bold] google.com [bold]--export json[/bold]
     """,
     rich_markup_mode="rich"
@@ -39,6 +42,7 @@ def display_results(results: List[ModuleResult], target: str):
 
     table = Table(title=f"Results for {target}", show_header=True, header_style="bold magenta")
     table.add_column("Module", style="cyan")
+    table.add_column("Target", style="white")
     table.add_column("Status", style="bold")
     table.add_column("Confidence", style="magenta")
     table.add_column("Findings", style="green")
@@ -57,6 +61,7 @@ def display_results(results: List[ModuleResult], target: str):
         
         table.add_row(
             result.module_name, 
+            result.target,
             status_str,
             result.confidence, 
             findings
@@ -77,16 +82,12 @@ def main(
     domain: Optional[str] = typer.Option(None, "-d", "--domain", help="Scan a [bold]domain[/bold]"),
     username: Optional[str] = typer.Option(None, "-u", "--username", help="Scan a [bold]username[/bold]"),
     phone: Optional[str] = typer.Option(None, "-p", "--phone", help="Scan a [bold]phone number[/bold] (e.g. '(966)50XXXXXXX')"),
+    deep: bool = typer.Option(False, "--deep", "-D", help="Deep scan: automatically follow linked data (e.g. input = email output = email + username,phone,domain)"),
     export: Optional[str] = typer.Option(None, "--export", help="Export format: [bold]json[/bold] or [bold]csv[/bold]"),
     version: bool = typer.Option(False, "--version", "-v", help="Show version info")
 ):
     """
     [bold cyan]AutoOSINT[/bold cyan]: Professional OSINT Investigation Tool.
-    
-    [bold underline]Usage:[/bold underline]
-    $ autoosint -d google.com
-    $ autoosint -e admin@example.com
-    $ autoosint -p "(966)50XXXXXXX" --export json
     """
     if version:
         console.print("[bold cyan]AutoOSINT v0.1.0[/bold cyan]")
@@ -115,9 +116,11 @@ def main(
 
     if final_target:
         console.print(f"[bold blue]Target:[/bold blue] {final_target} ({target_type.upper()})")
+        if deep:
+            console.print("[bold yellow]Deep Scanning Enabled:[/bold yellow] Following linked data...")
         console.print(f"[bold blue]Initiating scan...[/bold blue]")
         
-        results = engine.run_all(final_target, target_type)
+        results = engine.run_all(final_target, target_type, recursive=deep)
         display_results(results, final_target)
 
         if export:
